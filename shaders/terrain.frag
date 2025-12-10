@@ -109,25 +109,24 @@ vec4 shading_phong(light li, vec3 e, vec3 p, vec3 s, vec3 n)
 }
 
 vec3 shading_terrain(vec3 pos) {
-    // --- WATER REGION ---
+    // Water area
     if (pos.z <= -0.15) {
         vec3 e       = position.xyz;
         vec3 p_local = pos;
         vec3 p_world = (model * vec4(p_local, 1.0)).xyz;
 
 
-        // animated base normal from procedural waves
+        // animated waves
         float wave1 = sin(2.5 * pos.x + 2.0 * iTime);
         float wave2 = cos(5.0 * pos.y + 1.5 * iTime);
         vec3 n_local = normalize(vec3(0.25 * wave1, 0.25 * wave2, 1.0));
         vec3 n_world = normalize((model * vec4(n_local, 0.0)).xyz);
 
-        // flow mostly along +Y
+
         vec2 flowDir   = normalize(vec2(0.0, 1.0));
         float flowSpeed = 0.35;
         vec2 flowOffset = flowDir * (flowSpeed * iTime);
 
-        // base UVs + distortion from waves
         vec2 uvBase = pos.xy * 10.0 + flowOffset;
         vec2 uv1    = uvBase + 0.07 * n_local.xy;      // warped by waves
         vec2 uv2    = vec2(-uvBase.y, uvBase.x) * 0.8; // rotated second layer
@@ -136,13 +135,12 @@ vec3 shading_terrain(vec3 pos) {
         vec3 tex2 = texture(water_tex, uv2).rgb;
         vec3 texCol = 0.5 * tex1 + 0.5 * tex2;
 
-        // color grading: deeper + surface tint
+        // color grading
         vec3 deep        = vec3(0.03, 0.12, 0.22);
         vec3 surfaceTint = vec3(0.04, 0.35, 0.45);
         float brightness = clamp(dot(texCol, vec3(0.3, 0.4, 0.3)), 0.0, 1.0);
         vec3 waterBase   = mix(deep, surfaceTint, brightness);
 
-        // Fresnel: brighter at grazing angles
         float cosTheta = max(dot(normalize(e - p_world), n_world), 0.0);
         float fresnel  = pow(1.0 - cosTheta, 3.0);
         waterBase += fresnel * vec3(0.2, 0.25, 0.3);
@@ -153,7 +151,7 @@ vec3 shading_terrain(vec3 pos) {
         return waterBase * lit;
     }
 
-    // --- MOUNTAINS (unchanged) ---
+    // Mountain area
     vec3 n = compute_normal(pos.xy, 0.01);
     vec3 e = position.xyz;
     vec3 p = pos.xyz;
