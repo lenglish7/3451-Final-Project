@@ -55,6 +55,7 @@ public:
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/billboard.vert", "shaders/alphablend.frag", "billboard");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/terrain.vert", "shaders/terrain.frag", "terrain");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/skybox.vert", "shaders/skybox.frag", "skybox");
+        //OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/water.frag", "water"); 
 
         //// Load all the textures you need for the scene
         //// In the function call of Add_Shader_From_File(), we specify two names:
@@ -73,6 +74,8 @@ public:
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/buzz_color.png", "buzz_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/star.png", "star_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/boattex.jpg", "boat_color");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/water_color.png", "water_color");
+
 
         //// Add all the lights you need for the scene (no more than 4 lights)
         //// The four parameters are position, ambient, diffuse, and specular.
@@ -163,7 +166,38 @@ public:
 
             //// bind shader to object (we do not bind texture for this object because we create noise for texture)
             terrain->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("terrain"));
+            terrain->Add_Texture("water_tex", OpenGLTextureLibrary::Get_Texture("water_color"));
+
         }
+        
+        //{
+        //    auto water = Add_Obj_Mesh_Object("obj/plane.obj");
+
+
+        //    Matrix4f r = Matrix4f::Identity();
+        //    Matrix4f s;
+        //    s << 1.0f, 0, 0, 0,
+        //        0, 3.0f, 0, 0,
+        //        0, 0, 1.0f, 0,
+        //        0, 0, 0, 1.0f;
+        //    Matrix4f t;
+        //    t << 1.0f, 0, 0, 0,
+        //        0, 1.0f, 0, -3.0,
+        //        0, 0, 1.0f, 0,
+        //        0, 0, 0, 1.0f;
+
+        //    terrain->Set_Model_Matrix(t* s* r);
+
+        //    water->Set_Ka(Vector3f(0.0f, 0.05f, 0.1f));
+        //    water->Set_Kd(Vector3f(0.0f, 0.2f, 0.4f));
+        //    water->Set_Ks(Vector3f(0.8f, 0.8f, 0.8f));
+        //    water->Set_Shininess(128.f);
+
+        //    water->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("sphere_color"));
+        //    water->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("sphere_normal"));
+
+        //    water->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("water"));
+        //}
 
         {
         auto boat = Add_Obj_Mesh_Object("obj/boat.obj");
